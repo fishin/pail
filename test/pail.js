@@ -38,7 +38,33 @@ describe('pail', function () {
         expect(pail.foo).to.exist;
         done();
     });
-    
+
+    it('link', function (done) {
+
+        var pails = Pail.getPails();
+        var pail = Pail.getPail(pails[0]);
+        Pail.linkPail(pail.id, '/tmp/pail/link');
+        done();
+    });
+
+    it('get by linkpath', function (done) {
+
+        var pail_id = Pail.getPailByLinkPath('/tmp/pail/link');
+        expect(pail_id).to.exist;
+        done();
+    });
+
+    it('unlink', function (done) {
+
+        Pail.unlinkPail('/tmp/pail/link');
+        var pail_id = null;
+        setTimeout(function() {
+            pail_id = Pail.getPailByLinkPath('/tmp/pail/link');
+        }, 100);
+        expect(pail_id).to.not.exist;
+        done();
+    });
+
     it('save created', function (done) {
 
         var pails = Pail.getPails();
@@ -108,17 +134,6 @@ describe('pail', function () {
         expect(deletePails).to.have.length(0);
         done();
     });
-
-
-/*
-   if (config.status === 'succeeded' || config.status === 'failed' || config.status === 'cancelled') {
-       config.finishTime = new Date().getTime();
-   }
-   else if (config.status === 'starting') {
-       config.startTime = new Date().getTime();
-       config.status = 'started';
-   }
-*/
 
     it('getDirs with file', function (done) {
 
