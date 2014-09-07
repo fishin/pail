@@ -38,6 +38,18 @@ describe('pail', function () {
         expect(pail.foo).to.exist;
         done();
     });
+    
+    it('save created', function (done) {
+
+        var pails = Pail.getPails();
+        var pail = Pail.getPail(pails[0]);
+        pail.status = 'created';
+        var config = Pail.savePail(pail);
+        expect(config.createTime).to.exist;
+        expect(config.startTime).to.not.exist;
+        expect(config.status).to.equal('created');
+        done();
+    });
 
     it('save starting', function (done) {
 
