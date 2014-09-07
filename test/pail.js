@@ -12,13 +12,14 @@ var before = lab.before;
 var after = lab.after;
 var describe = lab.describe;
 var it = lab.it;
+var pailPath = '/tmp';
 
 describe('pail', function () {
 
     it('save', function (done) {
 
         var config = { foo: 'bar' };
-        var pail = Pail.savePail(config);
+        var pail = Pail.savePail(pailPath, config);
         expect(pail.foo).to.exist;
         pail.bar = 'foo';
         done();
@@ -26,40 +27,40 @@ describe('pail', function () {
 
     it('get pails', function (done) {
 
-        var pails = Pail.getPails();
+        var pails = Pail.getPails(pailPath);
         expect(pails).to.have.length(1);
         done();
     });
 
     it('get', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
         expect(pail.foo).to.exist;
         done();
     });
 
     it('link', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
-        Pail.linkPail(pail.id, '/tmp/pail/link');
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
+        Pail.linkPail(pailPath, pail.id, 'link');
         done();
     });
 
     it('get by linkpath', function (done) {
 
-        var pail_id = Pail.getPailByLinkPath('/tmp/pail/link');
+        var pail_id = Pail.getPailByName(pailPath, 'link');
         expect(pail_id).to.exist;
         done();
     });
 
     it('unlink', function (done) {
 
-        Pail.unlinkPail('/tmp/pail/link');
+        Pail.unlinkPail(pailPath, 'link');
         var pail_id = null;
         setTimeout(function() {
-            pail_id = Pail.getPailByLinkPath('/tmp/pail/link');
+            pail_id = Pail.getPailByName(pailPath, 'link');
         }, 100);
         expect(pail_id).to.not.exist;
         done();
@@ -67,10 +68,10 @@ describe('pail', function () {
 
     it('save created', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
         pail.status = 'created';
-        var config = Pail.savePail(pail);
+        var config = Pail.savePail(pailPath, pail);
         expect(config.createTime).to.exist;
         expect(config.startTime).to.not.exist;
         expect(config.status).to.equal('created');
@@ -79,10 +80,10 @@ describe('pail', function () {
 
     it('save starting', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
         pail.status = 'starting';
-        var config = Pail.savePail(pail);
+        var config = Pail.savePail(pailPath, pail);
         expect(config.startTime).to.exist;
         expect(config.finishTime).to.not.exist;
         expect(config.status).to.equal('started');
@@ -91,11 +92,11 @@ describe('pail', function () {
 
     it('save succeeded', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
         pail.status = 'succeeded';
         pail.finishTime = null;
-        var config = Pail.savePail(pail);
+        var config = Pail.savePail(pailPath, pail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('succeeded');
         done();
@@ -103,11 +104,11 @@ describe('pail', function () {
 
     it('save failed', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
         pail.status = 'failed';
         pail.finishTime = null;
-        var config = Pail.savePail(pail);
+        var config = Pail.savePail(pailPath, pail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('failed');
         done();
@@ -115,11 +116,11 @@ describe('pail', function () {
 
     it('save cancelled', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
         pail.status = 'cancelled';
         pail.finishTime = null;
-        var config = Pail.savePail(pail);
+        var config = Pail.savePail(pailPath, pail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('cancelled');
         done();
@@ -127,10 +128,10 @@ describe('pail', function () {
 
     it('delete', function (done) {
 
-        var pails = Pail.getPails();
-        var pail = Pail.getPail(pails[0]);
-        Pail.deletePail(pail.id);
-        var deletePails = Pail.getPails();
+        var pails = Pail.getPails(pailPath);
+        var pail = Pail.getPail(pailPath, pails[0]);
+        Pail.deletePail(pailPath, pail.id);
+        var deletePails = Pail.getPails(pailPath);
         expect(deletePails).to.have.length(0);
         done();
     });
