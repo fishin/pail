@@ -12,7 +12,8 @@ var before = lab.before;
 var after = lab.after;
 var describe = lab.describe;
 var it = lab.it;
-var pailPath = '/tmp';
+
+var pailPath = '/tmp/pail';
 
 describe('pail', function () {
 
