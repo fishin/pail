@@ -15,6 +15,8 @@ var it = lab.it;
 
 var pailPath = '/tmp/pail';
 
+var workspace = 'workspace';
+
 describe('pail', function () {
 
     it('save', function (done) {
@@ -137,14 +139,18 @@ describe('pail', function () {
         done();
     });
 
-    it('getDirs with file', function (done) {
+    it('deleteWorkspace with files and dirs', function (done) {
 
-        var tmpDir = Path.join(__dirname, 'tmp');
+        var config = { foo: 'bar' };
+        var pail = Pail.savePail(pailPath, config);
+        var tmpDir = Path.join(pailPath, pail.id, workspace, 'tmp');
+        var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
-        var dirs = Pail.getDirs(__dirname);
+        Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
+        var dirs = Pail.getDirs(pailPath + '/' + pail.id);
         expect(dirs).to.have.length(1);
-        Fs.rmdirSync(tmpDir);
-        var dirs2 = Pail.getDirs(__dirname);
+        Pail.deletePail(pailPath, pail.id);
+        var dirs2 = Pail.getDirs(pailPath);
         expect(dirs2).to.have.length(0);
         done();
     });
