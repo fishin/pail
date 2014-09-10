@@ -1,7 +1,7 @@
 var Fs = require('fs');
 var Hapi = require('hapi');
 var Lab = require('lab');
-var Pail = require('../lib/pail');
+var Pail = require('../lib/index');
 var Path = require('path');
 
 var internals = {};
@@ -13,57 +13,54 @@ var after = lab.after;
 var describe = lab.describe;
 var it = lab.it;
 
-var pailPath = '/tmp/pail';
-
-var workspace = 'workspace';
+var pail = new Pail({ pailPath: '/tmp/pail', workspace: 'workspace'});
 
 describe('pail', function () {
 
     it('save', function (done) {
 
         var config = { foo: 'bar' };
-        var pail = Pail.savePail(pailPath, config);
-        expect(pail.foo).to.exist;
-        pail.bar = 'foo';
+        var savePail = pail.savePail(config);
+        expect(savePail.foo).to.exist;
         done();
     });
 
     it('get pails', function (done) {
 
-        var pails = Pail.getPails(pailPath);
+        var pails = pail.getPails();
         expect(pails).to.have.length(1);
         done();
     });
 
     it('get', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        expect(pail.foo).to.exist;
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        expect(getPail.foo).to.exist;
         done();
     });
 
     it('link', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        Pail.linkPail(pailPath, pail.id, 'link');
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        pail.linkPail(getPail.id, 'link');
         done();
     });
 
     it('get by linkpath', function (done) {
 
-        var pail_id = Pail.getPailByName(pailPath, 'link');
+        var pail_id = pail.getPailByName('link');
         expect(pail_id).to.exist;
         done();
     });
 
     it('unlink', function (done) {
 
-        Pail.unlinkPail(pailPath, 'link');
+        pail.unlinkPail('link');
         var pail_id = null;
         setTimeout(function() {
-            pail_id = Pail.getPailByName(pailPath, 'link');
+            pail_id = pail.getPailByName('link');
         }, 100);
         expect(pail_id).to.not.exist;
         done();
@@ -71,10 +68,10 @@ describe('pail', function () {
 
     it('save created', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        pail.status = 'created';
-        var config = Pail.savePail(pailPath, pail);
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        getPail.status = 'created';
+        var config = pail.savePail(getPail);
         expect(config.createTime).to.exist;
         expect(config.startTime).to.not.exist;
         expect(config.status).to.equal('created');
@@ -83,10 +80,10 @@ describe('pail', function () {
 
     it('save starting', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        pail.status = 'starting';
-        var config = Pail.savePail(pailPath, pail);
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        getPail.status = 'starting';
+        var config = pail.savePail(getPail);
         expect(config.startTime).to.exist;
         expect(config.finishTime).to.not.exist;
         expect(config.status).to.equal('started');
@@ -95,11 +92,11 @@ describe('pail', function () {
 
     it('save succeeded', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        pail.status = 'succeeded';
-        pail.finishTime = null;
-        var config = Pail.savePail(pailPath, pail);
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        getPail.status = 'succeeded';
+        getPail.finishTime = null;
+        var config = pail.savePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('succeeded');
         done();
@@ -107,11 +104,11 @@ describe('pail', function () {
 
     it('save failed', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        pail.status = 'failed';
-        pail.finishTime = null;
-        var config = Pail.savePail(pailPath, pail);
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        getPail.status = 'failed';
+        getPail.finishTime = null;
+        var config = pail.savePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('failed');
         done();
@@ -119,11 +116,11 @@ describe('pail', function () {
 
     it('save cancelled', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        pail.status = 'cancelled';
-        pail.finishTime = null;
-        var config = Pail.savePail(pailPath, pail);
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        getPail.status = 'cancelled';
+        getPail.finishTime = null;
+        var config = pail.savePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('cancelled');
         done();
@@ -131,10 +128,10 @@ describe('pail', function () {
 
     it('delete', function (done) {
 
-        var pails = Pail.getPails(pailPath);
-        var pail = Pail.getPail(pailPath, pails[0]);
-        Pail.deletePail(pailPath, pail.id);
-        var deletePails = Pail.getPails(pailPath);
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        pail.deletePail(getPail.id);
+        var deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
     });
@@ -142,15 +139,15 @@ describe('pail', function () {
     it('deleteWorkspace with files and dirs', function (done) {
 
         var config = { foo: 'bar' };
-        var pail = Pail.savePail(pailPath, config);
-        var tmpDir = Path.join(pailPath, pail.id, workspace, 'tmp');
+        var savePail = pail.savePail(config);
+        var tmpDir = Path.join(pail.settings.pailPath, savePail.id, pail.settings.workspace, 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
-        var dirs = Pail.getDirs(pailPath + '/' + pail.id);
+        var dirs = pail.getDirs(pail.settings.pailPath + '/' + savePail.id);
         expect(dirs).to.have.length(1);
-        Pail.deletePail(pailPath, pail.id);
-        var dirs2 = Pail.getDirs(pailPath);
+        pail.deletePail(savePail.id);
+        var dirs2 = pail.getDirs(pail.settings.pailPath);
         expect(dirs2).to.have.length(0);
         done();
     });
