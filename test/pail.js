@@ -17,6 +17,13 @@ var pail = new Pail({ pailPath: '/tmp/pail', workspace: 'workspace'});
 
 describe('pail', function () {
 
+    it('getDirs with no valid path', function (done) {
+
+        var dirs = pail.getDirs('foo');
+        expect(dirs).to.have.length(0);
+        done();
+    });
+
     it('save', function (done) {
 
         var config = { foo: 'bar' };
