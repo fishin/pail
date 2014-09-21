@@ -13,7 +13,7 @@ var after = lab.after;
 var describe = lab.describe;
 var it = lab.it;
 
-var pail = new Pail({ pailPath: '/tmp/pail', workspace: 'workspace'});
+var pail = new Pail({ pailPath: '/tmp/testpail', workspace: 'workspace'});
 
 describe('pail', function () {
 
@@ -51,7 +51,7 @@ describe('pail', function () {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
-        pail.linkPail(getPail.id, 'link');
+        pail.linkPail(getPail.pail_id, 'link');
         done();
     });
 
@@ -137,7 +137,7 @@ describe('pail', function () {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
-        pail.deletePail(getPail.id);
+        pail.deletePail(getPail.pail_id);
         var deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
@@ -147,13 +147,13 @@ describe('pail', function () {
 
         var config = { foo: 'bar' };
         var savePail = pail.savePail(config);
-        var tmpDir = Path.join(pail.settings.pailPath, savePail.id, pail.settings.workspace, 'tmp');
+        var tmpDir = Path.join(pail.settings.pailPath, savePail.pail_id, pail.settings.workspace, 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
-        var dirs = pail.getDirs(pail.settings.pailPath + '/' + savePail.id);
+        var dirs = pail.getDirs(pail.settings.pailPath + '/' + savePail.pail_id);
         expect(dirs).to.have.length(1);
-        pail.deletePail(savePail.id);
+        pail.deletePail(savePail.pail_id);
         var dirs2 = pail.getDirs(pail.settings.pailPath);
         expect(dirs2).to.have.length(0);
         done();
