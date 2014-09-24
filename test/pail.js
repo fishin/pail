@@ -50,46 +50,13 @@ describe('pail', function () {
         expect(getPail.foo).to.exist;
         done();
     });
-/*
-    it('link', function (done) {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
-        pail.linkPail(getPail.id, 'link');
-        done();
-    });
-*/
     it('getPailByName', function (done) {
 
         var pail_id = pail.getPailByName('link');
         expect(pail_id).to.exist;
         done();
     });
-/*
-    it('unlink', function (done) {
-
-        pail.unlinkPail('link');
-        var pail_id = null;
-        setTimeout(function() {
-            pail_id = pail.getPailByName('link');
-        }, 100);
-        expect(pail_id).to.not.exist;
-        done();
-    });
-*/
-/*
-    it('save created', function (done) {
-
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
-        getPail.status = 'created';
-        var config = pail.savePail(getPail);
-        expect(config.createTime).to.exist;
-        expect(config.startTime).to.not.exist;
-        expect(config.status).to.equal('created');
-        done();
-    });
-*/
 
     it('savePail starting', function (done) {
 
@@ -172,6 +139,39 @@ describe('pail', function () {
         pail.deletePail(createPail.id);
         var dirs2 = pail.getDirs(pail.settings.dirpath);
         expect(dirs2).to.have.length(0);
+        done();
+    });
+
+    it('createPail noname', function (done) {
+
+        var config = { foo: 'bar' };
+        var createPail = pail.createPail(config);
+        expect(createPail.foo).to.equal('bar');
+        expect(config.createTime).to.exist;
+        expect(config.startTime).to.not.exist;
+        expect(config.status).to.equal('created');
+        done();
+    });
+
+    it('savePail noname starting', function (done) {
+
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        getPail.status = 'starting';
+        var config = pail.savePail(getPail);
+        expect(config.startTime).to.exist;
+        expect(config.finishTime).to.not.exist;
+        expect(config.status).to.equal('started');
+        done();
+    });
+
+    it('deletePail noname', function (done) {
+
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        pail.deletePail(getPail.id);
+        var deletePails = pail.getPails();
+        expect(deletePails).to.have.length(0);
         done();
     });
 
