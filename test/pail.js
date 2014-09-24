@@ -24,29 +24,33 @@ describe('pail', function () {
         done();
     });
 
-    it('save', function (done) {
+    it('createPail', function (done) {
 
-        var config = { foo: 'bar' };
-        var savePail = pail.savePail(config);
-        expect(savePail.foo).to.exist;
+        var config = { name: 'link', foo: 'bar' };
+        var createPail = pail.createPail(config);
+        expect(createPail.name).to.equal('link');
+        expect(createPail.foo).to.equal('bar');
+        expect(config.createTime).to.exist;
+        expect(config.startTime).to.not.exist;
+        expect(config.status).to.equal('created');
         done();
     });
 
-    it('get pails', function (done) {
+    it('getPails', function (done) {
 
         var pails = pail.getPails();
         expect(pails).to.have.length(1);
         done();
     });
 
-    it('get', function (done) {
+    it('getPail', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         expect(getPail.foo).to.exist;
         done();
     });
-
+/*
     it('link', function (done) {
 
         var pails = pail.getPails();
@@ -54,14 +58,14 @@ describe('pail', function () {
         pail.linkPail(getPail.id, 'link');
         done();
     });
-
-    it('get by linkpath', function (done) {
+*/
+    it('getPailByName', function (done) {
 
         var pail_id = pail.getPailByName('link');
         expect(pail_id).to.exist;
         done();
     });
-
+/*
     it('unlink', function (done) {
 
         pail.unlinkPail('link');
@@ -72,7 +76,8 @@ describe('pail', function () {
         expect(pail_id).to.not.exist;
         done();
     });
-
+*/
+/*
     it('save created', function (done) {
 
         var pails = pail.getPails();
@@ -84,8 +89,9 @@ describe('pail', function () {
         expect(config.status).to.equal('created');
         done();
     });
+*/
 
-    it('save starting', function (done) {
+    it('savePail starting', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
@@ -97,7 +103,7 @@ describe('pail', function () {
         done();
     });
 
-    it('save succeeded', function (done) {
+    it('savePail succeeded', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
@@ -109,7 +115,7 @@ describe('pail', function () {
         done();
     });
 
-    it('save failed', function (done) {
+    it('savePail failed', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
@@ -121,7 +127,7 @@ describe('pail', function () {
         done();
     });
 
-    it('save cancelled', function (done) {
+    it('savePail cancelled', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
@@ -133,7 +139,17 @@ describe('pail', function () {
         done();
     });
 
-    it('delete', function (done) {
+    it('savePail rename', function (done) {
+
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        getPail.name = 'newname';
+        var config = pail.savePail(getPail);
+        expect(config.name).to.equal('newname');
+        done();
+    });
+
+    it('deletePail', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
@@ -146,14 +162,14 @@ describe('pail', function () {
     it('deleteWorkspace with files and dirs', function (done) {
 
         var config = { foo: 'bar' };
-        var savePail = pail.savePail(config);
-        var tmpDir = Path.join(pail.settings.dirpath, savePail.id, pail.settings.workspace, 'tmp');
+        var createPail = pail.createPail(config);
+        var tmpDir = Path.join(pail.settings.dirpath, createPail.id, pail.settings.workspace, 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
-        var dirs = pail.getDirs(pail.settings.dirpath + '/' + savePail.id);
+        var dirs = pail.getDirs(pail.settings.dirpath + '/' + createPail.id);
         expect(dirs).to.have.length(1);
-        pail.deletePail(savePail.id);
+        pail.deletePail(createPail.id);
         var dirs2 = pail.getDirs(pail.settings.dirpath);
         expect(dirs2).to.have.length(0);
         done();
