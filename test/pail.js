@@ -13,7 +13,7 @@ var after = lab.after;
 var describe = lab.describe;
 var it = lab.it;
 
-var pail = new Pail({ pailPath: '/tmp/testpail', workspace: 'workspace'});
+var pail = new Pail({ dirpath: '/tmp/testpail', workspace: 'workspace'});
 
 describe('pail', function () {
 
@@ -147,14 +147,14 @@ describe('pail', function () {
 
         var config = { foo: 'bar' };
         var savePail = pail.savePail(config);
-        var tmpDir = Path.join(pail.settings.pailPath, savePail.id, pail.settings.workspace, 'tmp');
+        var tmpDir = Path.join(pail.settings.dirpath, savePail.id, pail.settings.workspace, 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
-        var dirs = pail.getDirs(pail.settings.pailPath + '/' + savePail.id);
+        var dirs = pail.getDirs(pail.settings.dirpath + '/' + savePail.id);
         expect(dirs).to.have.length(1);
         pail.deletePail(savePail.id);
-        var dirs2 = pail.getDirs(pail.settings.pailPath);
+        var dirs2 = pail.getDirs(pail.settings.dirpath);
         expect(dirs2).to.have.length(0);
         done();
     });
