@@ -14,13 +14,14 @@ var describe = lab.describe;
 var it = lab.it;
 
 var pail = new Pail({ dirpath: '/tmp/testpail', workspace: 'workspace'});
+var noexist = new Pail({ dirpath: '/tmp/noexist', workspace: 'workspace'});
 
 describe('pail', function () {
 
-    it('getDirs with no valid path', function (done) {
+    it('getPails with no valid path', function (done) {
 
-        var dirs = pail.getDirs('foo');
-        expect(dirs).to.have.length(0);
+        var pails = noexist.getPails();
+        expect(pails).to.have.length(0);
         done();
     });
 
@@ -134,11 +135,11 @@ describe('pail', function () {
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
-        var dirs = pail.getDirs(pail.settings.dirpath + '/' + createPail.id);
-        expect(dirs).to.have.length(1);
+        var pails = pail.getPails(pail.settings.dirpath + '/' + createPail.id);
+        expect(pails).to.have.length(1);
         pail.deletePail(createPail.id);
-        var dirs2 = pail.getDirs(pail.settings.dirpath);
-        expect(dirs2).to.have.length(0);
+        var deletePails = pail.getPails(pail.settings.dirpath);
+        expect(deletePails).to.have.length(0);
         done();
     });
 
