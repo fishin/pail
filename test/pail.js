@@ -60,60 +60,60 @@ describe('pail', function () {
         done();
     });
 
-    it('savePail starting', function (done) {
+    it('updatePail starting', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         getPail.status = 'starting';
-        var config = pail.savePail(getPail);
+        var config = pail.updatePail(getPail);
         expect(config.startTime).to.exist;
         expect(config.finishTime).to.not.exist;
         expect(config.status).to.equal('started');
         done();
     });
 
-    it('savePail succeeded', function (done) {
+    it('updatePail succeeded', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         getPail.status = 'succeeded';
         getPail.finishTime = null;
-        var config = pail.savePail(getPail);
+        var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('succeeded');
         done();
     });
 
-    it('savePail failed', function (done) {
+    it('updatePail failed', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         getPail.status = 'failed';
         getPail.finishTime = null;
-        var config = pail.savePail(getPail);
+        var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('failed');
         done();
     });
 
-    it('savePail cancelled', function (done) {
+    it('updatePail cancelled', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         getPail.status = 'cancelled';
         getPail.finishTime = null;
-        var config = pail.savePail(getPail);
+        var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('cancelled');
         done();
     });
 
-    it('savePail rename', function (done) {
+    it('updatePail rename', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         getPail.name = 'newname';
-        var config = pail.savePail(getPail);
+        var config = pail.updatePail(getPail);
         expect(config.name).to.equal('newname');
         done();
     });
@@ -158,12 +158,12 @@ describe('pail', function () {
         done();
     });
 
-    it('savePail noname starting', function (done) {
+    it('updatePail noname starting', function (done) {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         getPail.status = 'starting';
-        var config = pail.savePail(getPail);
+        var config = pail.updatePail(getPail);
         expect(config.startTime).to.exist;
         expect(config.finishTime).to.not.exist;
         expect(config.status).to.equal('started');
