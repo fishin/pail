@@ -27,21 +27,14 @@ describe('pail', function () {
 
     it('createPail with workspace', function (done) {
 
-        var config = { name: 'link', foo: 'bar' };
+        var config = { name: 'name', foo: 'bar' };
         var createPail = pail.createPail(config);
         pail.createWorkspace(createPail.id);
-        expect(createPail.name).to.equal('link');
+        expect(createPail.name).to.equal('name');
         expect(createPail.foo).to.equal('bar');
         expect(config.createTime).to.exist;
         expect(config.startTime).to.not.exist;
         expect(config.status).to.equal('created');
-        done();
-    });
-
-    it('getPails', function (done) {
-
-        var pails = pail.getPails();
-        expect(pails).to.have.length(1);
         done();
     });
 
@@ -55,8 +48,15 @@ describe('pail', function () {
 
     it('getPailByName', function (done) {
 
-        var pail_id = pail.getPailByName('link');
+        var pail_id = pail.getPailByName('name');
         expect(pail_id).to.exist;
+        done();
+    });
+    
+    it('getPails', function (done) {
+
+        var pails = pail.getPails();
+        expect(pails).to.have.length(1);
         done();
     });
 
@@ -81,6 +81,8 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('succeeded');
+        var link = pail.getPailByName('lastSuccess');
+        expect(link).to.equal(config.id);
         done();
     });
 
@@ -93,6 +95,8 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('failed');
+        var link = pail.getPailByName('lastFail');
+        expect(link).to.equal(config.id);
         done();
     });
 
@@ -105,6 +109,8 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('cancelled');
+        var link = pail.getPailByName('lastCancel');
+        expect(link).to.equal(config.id);
         done();
     });
 
@@ -124,6 +130,7 @@ describe('pail', function () {
         var getPail = pail.getPail(pails[0]);
         pail.deleteWorkspace(getPail.id);
         pail.deletePail(getPail.id);
+        pail.deleteLastLinks();
         var deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
@@ -175,6 +182,25 @@ describe('pail', function () {
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         pail.deletePail(getPail.id);
+        var deletePails = pail.getPails();
+        expect(deletePails).to.have.length(0);
+        done();
+    });
+
+    it('deleteLink', function (done) {
+
+        var config1 = { name: 'pail1', foo: 'bar' };
+        var config2 = { name: 'pail2', foo: 'bar' };
+        var createPail1 = pail.createPail(config1);
+        var createPail2 = pail.createPail(config2);
+        pail.createLink(createPail1.id, 'link');
+        pail.createLink(createPail2.id, 'link');
+        var link = pail.getPailByName('link');
+        expect(link).to.equal(createPail2.id);
+        pail.deleteLastLinks();
+        pail.deleteLink('link');
+        pail.deletePail(createPail1.id);
+        pail.deletePail(createPail2.id);
         var deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
