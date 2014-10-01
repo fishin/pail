@@ -83,6 +83,7 @@ describe('pail', function () {
         expect(config.status).to.equal('succeeded');
         var link = pail.getPailByName('lastSuccess');
         expect(link).to.equal(config.id);
+        expect(config.updateTime).to.exist;
         done();
     });
 
@@ -97,6 +98,7 @@ describe('pail', function () {
         expect(config.status).to.equal('failed');
         var link = pail.getPailByName('lastFail');
         expect(link).to.equal(config.id);
+        expect(config.updateTime).to.exist;
         done();
     });
 
@@ -111,6 +113,16 @@ describe('pail', function () {
         expect(config.status).to.equal('cancelled');
         var link = pail.getPailByName('lastCancel');
         expect(link).to.equal(config.id);
+        expect(config.updateTime).to.exist;
+        done();
+    });
+
+    it('getLinks', function (done) {
+
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        var links = pail.getLinks(getPail.id);
+        expect(links).to.have.length(5);
         done();
     });
 
@@ -121,6 +133,7 @@ describe('pail', function () {
         getPail.name = 'newname';
         var config = pail.updatePail(getPail);
         expect(config.name).to.equal('newname');
+        expect(config.updateTime).to.exist;
         done();
     });
 
@@ -130,7 +143,8 @@ describe('pail', function () {
         var getPail = pail.getPail(pails[0]);
         pail.deleteWorkspace(getPail.id);
         pail.deletePail(getPail.id);
-        pail.deleteLastLinks();
+        var links = pail.getLinks(getPail.id);
+        expect(links).to.have.length(0);
         var deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
@@ -197,7 +211,6 @@ describe('pail', function () {
         pail.createLink(createPail2.id, 'link');
         var link = pail.getPailByName('link');
         expect(link).to.equal(createPail2.id);
-        pail.deleteLastLinks();
         pail.deleteLink('link');
         pail.deletePail(createPail1.id);
         pail.deletePail(createPail2.id);
@@ -205,5 +218,4 @@ describe('pail', function () {
         expect(deletePails).to.have.length(0);
         done();
     });
-
 });
