@@ -27,7 +27,7 @@ describe('pail', function () {
 
     it('getPailByLink no link', function (done) {
 
-        var pail_id = pail.getPailByLink('name');
+        var pail_id = pail.getPailByLink('link');
         expect(pail_id).to.not.exist;
         done();
     });
