@@ -25,6 +25,13 @@ describe('pail', function () {
         done();
     });
 
+    it('getPailByLink no link', function (done) {
+
+        var pail_id = pail.getPailByLink('name');
+        expect(pail_id).to.not.exist;
+        done();
+    });
+
     it('createPail with workspace', function (done) {
 
         var config = { name: 'name', foo: 'bar' };
