@@ -46,9 +46,9 @@ describe('pail', function () {
         done();
     });
 
-    it('getPailByName', function (done) {
+    it('getPailByLink', function (done) {
 
-        var pail_id = pail.getPailByName('name');
+        var pail_id = pail.getPailByLink('name');
         expect(pail_id).to.exist;
         done();
     });
@@ -81,7 +81,7 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('succeeded');
-        var link = pail.getPailByName('lastSuccess');
+        var link = pail.getPailByLink('lastSuccess');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist;
         done();
@@ -96,7 +96,7 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('failed');
-        var link = pail.getPailByName('lastFail');
+        var link = pail.getPailByLink('lastFail');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist;
         done();
@@ -111,7 +111,7 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist;
         expect(config.status).to.equal('cancelled');
-        var link = pail.getPailByName('lastCancel');
+        var link = pail.getPailByLink('lastCancel');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist;
         done();
@@ -209,7 +209,7 @@ describe('pail', function () {
         var createPail2 = pail.createPail(config2);
         pail.createLink(createPail1.id, 'link');
         pail.createLink(createPail2.id, 'link');
-        var link = pail.getPailByName('link');
+        var link = pail.getPailByLink('link');
         expect(link).to.equal(createPail2.id);
         pail.deleteLink('link');
         pail.deletePail(createPail1.id);
