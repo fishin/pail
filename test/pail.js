@@ -1,13 +1,14 @@
+var Code = require('code');
 var Fs = require('fs');
 var Hapi = require('hapi');
 var Lab = require('lab');
-var Pail = require('../lib/index');
 var Path = require('path');
+var Pail = require('../lib/index');
 
 var internals = {};
 
 var lab = exports.lab = Lab.script();
-var expect = Lab.expect;
+var expect = Code.expect;
 var before = lab.before;
 var after = lab.after;
 var describe = lab.describe;
@@ -28,7 +29,7 @@ describe('pail', function () {
     it('getPailByLink no link', function (done) {
 
         var pail_id = pail.getPailByLink('link');
-        expect(pail_id).to.not.exist;
+        expect(pail_id).to.not.exist();
         done();
     });
 
@@ -39,8 +40,8 @@ describe('pail', function () {
         pail.createWorkspace(createPail.id);
         expect(createPail.name).to.equal('name');
         expect(createPail.foo).to.equal('bar');
-        expect(config.createTime).to.exist;
-        expect(config.startTime).to.not.exist;
+        expect(config.createTime).to.exist();
+        expect(config.startTime).to.not.exist();
         expect(config.status).to.equal('created');
         done();
     });
@@ -49,14 +50,14 @@ describe('pail', function () {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
-        expect(getPail.foo).to.exist;
+        expect(getPail.foo).to.exist();
         done();
     });
 
     it('getPailByLink', function (done) {
 
         var pail_id = pail.getPailByLink('name');
-        expect(pail_id).to.exist;
+        expect(pail_id).to.exist();
         done();
     });
     
@@ -73,8 +74,8 @@ describe('pail', function () {
         var getPail = pail.getPail(pails[0]);
         getPail.status = 'starting';
         var config = pail.updatePail(getPail);
-        expect(config.startTime).to.exist;
-        expect(config.finishTime).to.not.exist;
+        expect(config.startTime).to.exist();
+        expect(config.finishTime).to.not.exist();
         expect(config.status).to.equal('started');
         done();
     });
@@ -86,11 +87,11 @@ describe('pail', function () {
         getPail.status = 'succeeded';
         getPail.finishTime = null;
         var config = pail.updatePail(getPail);
-        expect(config.finishTime).to.exist;
+        expect(config.finishTime).to.exist();
         expect(config.status).to.equal('succeeded');
         var link = pail.getPailByLink('lastSuccess');
         expect(link).to.equal(config.id);
-        expect(config.updateTime).to.exist;
+        expect(config.updateTime).to.exist();
         done();
     });
 
@@ -101,11 +102,11 @@ describe('pail', function () {
         getPail.status = 'failed';
         getPail.finishTime = null;
         var config = pail.updatePail(getPail);
-        expect(config.finishTime).to.exist;
+        expect(config.finishTime).to.exist();
         expect(config.status).to.equal('failed');
         var link = pail.getPailByLink('lastFail');
         expect(link).to.equal(config.id);
-        expect(config.updateTime).to.exist;
+        expect(config.updateTime).to.exist();
         done();
     });
 
@@ -116,11 +117,11 @@ describe('pail', function () {
         getPail.status = 'cancelled';
         getPail.finishTime = null;
         var config = pail.updatePail(getPail);
-        expect(config.finishTime).to.exist;
+        expect(config.finishTime).to.exist();
         expect(config.status).to.equal('cancelled');
         var link = pail.getPailByLink('lastCancel');
         expect(link).to.equal(config.id);
-        expect(config.updateTime).to.exist;
+        expect(config.updateTime).to.exist();
         done();
     });
 
@@ -140,7 +141,7 @@ describe('pail', function () {
         getPail.name = 'newname';
         var config = pail.updatePail(getPail);
         expect(config.name).to.equal('newname');
-        expect(config.updateTime).to.exist;
+        expect(config.updateTime).to.exist();
         done();
     });
 
@@ -180,8 +181,8 @@ describe('pail', function () {
         var config = { foo: 'bar' };
         var createPail = pail.createPail(config);
         expect(createPail.foo).to.equal('bar');
-        expect(config.createTime).to.exist;
-        expect(config.startTime).to.not.exist;
+        expect(config.createTime).to.exist();
+        expect(config.startTime).to.not.exist();
         expect(config.status).to.equal('created');
         done();
     });
@@ -192,8 +193,8 @@ describe('pail', function () {
         var getPail = pail.getPail(pails[0]);
         getPail.status = 'starting';
         var config = pail.updatePail(getPail);
-        expect(config.startTime).to.exist;
-        expect(config.finishTime).to.not.exist;
+        expect(config.startTime).to.exist();
+        expect(config.finishTime).to.not.exist();
         expect(config.status).to.equal('started');
         done();
     });
