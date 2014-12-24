@@ -35,12 +35,18 @@ describe('pail', function () {
 
         var config = { name: 'name', foo: 'bar' };
         var createPail = pail.createPail(config);
-        pail.createWorkspace(createPail.id);
+        pail.createWorkspace();
         expect(createPail.name).to.equal('name');
         expect(createPail.foo).to.equal('bar');
         expect(config.createTime).to.exist();
         expect(config.startTime).to.not.exist();
         expect(config.status).to.equal('created');
+        done();
+    });
+
+    it('createPail with existing workspace', function (done) {
+
+        pail.createWorkspace();
         done();
     });
 
@@ -147,7 +153,7 @@ describe('pail', function () {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
-        pail.deleteWorkspace(getPail.id);
+        pail.deleteWorkspace();
         pail.deletePail(getPail.id);
         var links = pail.getLinks(getPail.id);
         expect(links).to.have.length(0);
@@ -160,14 +166,14 @@ describe('pail', function () {
 
         var config = { foo: 'bar' };
         var createPail = pail.createPail(config);
-        pail.createWorkspace(createPail.id);
-        var tmpDir = Path.join(pail.settings.dirpath, createPail.id, pail.settings.workspace, 'tmp');
+        pail.createWorkspace();
+        var tmpDir = Path.join(pail.settings.dirpath, pail.settings.workspace, 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
         var pails = pail.getPails(pail.settings.dirpath + '/' + createPail.id);
         expect(pails).to.have.length(1);
-        pail.deleteWorkspace(createPail.id);
+        pail.deleteWorkspace();
         pail.deletePail(createPail.id);
         var deletePails = pail.getPails(pail.settings.dirpath);
         expect(deletePails).to.have.length(0);
