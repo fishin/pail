@@ -191,6 +191,14 @@ describe('pail', function () {
         done();
     });
 
+    it('deleteWorkspace with no workspace noname', function (done) {
+
+        var pails = pail.getPails();
+        var getPail = pail.getPail(pails[0]);
+        pail.deleteWorkspace();
+        done();
+    });
+
     it('updatePail noname starting', function (done) {
 
         var pails = pail.getPails();
