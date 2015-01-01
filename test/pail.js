@@ -180,6 +180,21 @@ describe('pail', function () {
         done();
     });
 
+    it('getWorkspaceArtifact with workspace', function (done) {
+       
+        var fileName = 'blah.json';
+        var blah = {
+            "foo": "bar"
+        };
+        var workspaceDir = Path.join(pail.settings.dirpath, pail.settings.workspace);
+        pail.createWorkspace();
+        Fs.writeFileSync(workspaceDir+'/'+fileName, JSON.stringify(blah));
+        var contents = JSON.parse(pail.getWorkspaceArtifact(fileName));
+        expect(contents.foo).to.equal('bar');
+        pail.deleteWorkspace();
+        done();
+    });
+
     it('createPail noname', function (done) {
 
         var config = { foo: 'bar' };
@@ -196,6 +211,14 @@ describe('pail', function () {
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
         pail.deleteWorkspace();
+        done();
+    });
+
+    it('getWorkspaceArtifact no workspace', function (done) {
+       
+        var fileName = 'blah.json';
+        var contents = pail.getWorkspaceArtifact(fileName);
+        expect(contents).to.not.exist();
         done();
     });
 
