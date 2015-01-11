@@ -12,8 +12,8 @@ var expect = Code.expect;
 var describe = lab.describe;
 var it = lab.it;
 
-var pail = new Pail({ dirpath: '/tmp/testpail', workspace: 'workspace'});
-var noexist = new Pail({ dirpath: '/tmp/noexist', workspace: 'workspace'});
+var pail = new Pail({ dirPath: '/tmp/testpail'});
+var noexist = new Pail({ dirPath: '/tmp/noexist'});
 
 describe('pail', function () {
 
@@ -167,15 +167,15 @@ describe('pail', function () {
         var config = { foo: 'bar' };
         var createPail = pail.createPail(config);
         pail.createWorkspace();
-        var tmpDir = Path.join(pail.settings.dirpath, pail.settings.workspace, 'tmp');
+        var tmpDir = Path.join(pail.settings.dirPath, pail.settings.workspace, 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
-        var pails = pail.getPails(pail.settings.dirpath + '/' + createPail.id);
+        var pails = pail.getPails(pail.settings.dirPath + '/' + createPail.id);
         expect(pails).to.have.length(1);
         pail.deleteWorkspace();
         pail.deletePail(createPail.id);
-        var deletePails = pail.getPails(pail.settings.dirpath);
+        var deletePails = pail.getPails(pail.settings.dirPath);
         expect(deletePails).to.have.length(0);
         done();
     });
@@ -186,7 +186,7 @@ describe('pail', function () {
         var blah = {
             "foo": "bar"
         };
-        var workspaceDir = Path.join(pail.settings.dirpath, pail.settings.workspace);
+        var workspaceDir = Path.join(pail.settings.dirPath, pail.settings.workspace);
         pail.createWorkspace();
         Fs.writeFileSync(workspaceDir+'/'+fileName, JSON.stringify(blah));
         var contents = JSON.parse(pail.getWorkspaceArtifact(fileName));
