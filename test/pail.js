@@ -35,7 +35,7 @@ describe('pail', function () {
 
         var config = { name: 'name', foo: 'bar' };
         var createPail = pail.createPail(config);
-        pail.createWorkspace();
+        pail.createDir('workspace');
         expect(createPail.name).to.equal('name');
         expect(createPail.foo).to.equal('bar');
         expect(config.createTime).to.exist();
@@ -46,7 +46,7 @@ describe('pail', function () {
 
     it('createPail with existing workspace', function (done) {
 
-        pail.createWorkspace();
+        pail.createDir('workspace');
         done();
     });
 
@@ -153,7 +153,7 @@ describe('pail', function () {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
-        pail.deleteWorkspace();
+        pail.deleteDir('workspace');
         pail.deletePail(getPail.id);
         var links = pail.getLinks(getPail.id);
         expect(links).to.have.length(0);
@@ -166,32 +166,32 @@ describe('pail', function () {
 
         var config = { foo: 'bar' };
         var createPail = pail.createPail(config);
-        pail.createWorkspace();
-        var tmpDir = Path.join(pail.settings.dirPath, pail.settings.workspace, 'tmp');
+        pail.createDir('workspace');
+        var tmpDir = Path.join(pail.settings.dirPath, 'workspace', 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
         var pails = pail.getPails(pail.settings.dirPath + '/' + createPail.id);
         expect(pails).to.have.length(1);
-        pail.deleteWorkspace();
+        pail.deleteDir('workspace');
         pail.deletePail(createPail.id);
         var deletePails = pail.getPails(pail.settings.dirPath);
         expect(deletePails).to.have.length(0);
         done();
     });
 
-    it('getWorkspaceArtifact with workspace', function (done) {
+    it('getArtifact with workspace', function (done) {
        
         var fileName = 'blah.json';
         var blah = {
             "foo": "bar"
         };
-        var workspaceDir = Path.join(pail.settings.dirPath, pail.settings.workspace);
-        pail.createWorkspace();
+        var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
+        pail.createDir('workspace');
         Fs.writeFileSync(workspaceDir+'/'+fileName, JSON.stringify(blah));
-        var contents = JSON.parse(pail.getWorkspaceArtifact(fileName));
+        var contents = JSON.parse(pail.getArtifact('workspace', fileName));
         expect(contents.foo).to.equal('bar');
-        pail.deleteWorkspace();
+        pail.deleteDir('workspace');
         done();
     });
 
@@ -210,14 +210,14 @@ describe('pail', function () {
 
         var pails = pail.getPails();
         var getPail = pail.getPail(pails[0]);
-        pail.deleteWorkspace();
+        pail.deleteDir('workspace');
         done();
     });
 
-    it('getWorkspaceArtifact no workspace', function (done) {
+    it('getArtifact no workspace', function (done) {
        
         var fileName = 'blah.json';
-        var contents = pail.getWorkspaceArtifact(fileName);
+        var contents = pail.getArtifact('workspace', fileName);
         expect(contents).to.not.exist();
         done();
     });
