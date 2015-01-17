@@ -24,6 +24,13 @@ describe('pail', function () {
         done();
     });
 
+    it('getPail with no valid path', function (done) {
+
+        var pail = noexist.getPail('noexist');
+        expect(pail).to.not.exist();
+        done();
+    });
+
     it('getPailByLink no link', function (done) {
 
         var pailId = pail.getPailByLink('link');
