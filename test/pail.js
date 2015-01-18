@@ -12,8 +12,8 @@ var expect = Code.expect;
 var describe = lab.describe;
 var it = lab.it;
 
-var pail = new Pail({ dirPath: '/tmp/testpail'});
-var noexist = new Pail({ dirPath: '/tmp/noexist'});
+var pail = new Pail({ dirPath: __dirname + '/tmp'});
+var noexist = new Pail({ dirPath: __dirname + '/noexist'});
 
 describe('pail', function () {
 
