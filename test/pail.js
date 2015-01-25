@@ -31,9 +31,9 @@ describe('pail', function () {
         done();
     });
 
-    it('getPailByLink no link', function (done) {
+    it('getPailByName no link', function (done) {
 
-        var pailId = pail.getPailByLink('link');
+        var pailId = pail.getPailByName('link');
         expect(pailId).to.not.exist();
         done();
     });
@@ -65,9 +65,9 @@ describe('pail', function () {
         done();
     });
 
-    it('getPailByLink', function (done) {
+    it('getPailByName', function (done) {
 
-        var pailId = pail.getPailByLink('name');
+        var pailId = pail.getPailByName('name');
         expect(pailId).to.exist();
         done();
     });
@@ -100,7 +100,7 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist();
         expect(config.status).to.equal('succeeded');
-        var link = pail.getPailByLink('lastSuccess');
+        var link = pail.getPailByName('lastSuccess');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist();
         done();
@@ -115,7 +115,7 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist();
         expect(config.status).to.equal('failed');
-        var link = pail.getPailByLink('lastFail');
+        var link = pail.getPailByName('lastFail');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist();
         done();
@@ -130,7 +130,7 @@ describe('pail', function () {
         var config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist();
         expect(config.status).to.equal('cancelled');
-        var link = pail.getPailByLink('lastCancel');
+        var link = pail.getPailByName('lastCancel');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist();
         done();
@@ -259,7 +259,7 @@ describe('pail', function () {
         var createPail2 = pail.createPail(config2);
         pail.createLink(createPail1.id, 'link');
         pail.createLink(createPail2.id, 'link');
-        var link = pail.getPailByLink('link');
+        var link = pail.getPailByName('link');
         expect(link).to.equal(createPail2.id);
         pail.deleteLink('link');
         pail.deletePail(createPail1.id);
