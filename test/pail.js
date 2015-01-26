@@ -31,6 +31,13 @@ describe('pail', function () {
         done();
     });
 
+    it('getFiles with no valid path', function (done) {
+
+        var files = noexist.getFiles('noexist');
+        expect(files.length).to.be.equal(0);
+        done();
+    });
+
     it('getPailByName no link', function (done) {
 
         var pailId = pail.getPailByName('link');
@@ -180,6 +187,8 @@ describe('pail', function () {
         Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
         var pails = pail.getPails(pail.settings.dirPath + '/' + createPail.id);
         expect(pails).to.have.length(1);
+        var files = pail.getFiles('workspace');
+        expect(files.length).to.be.equal(0);
         pail.deleteDir('workspace');
         pail.deletePail(createPail.id);
         var deletePails = pail.getPails(pail.settings.dirPath);
@@ -234,8 +243,16 @@ describe('pail', function () {
         var archive = JSON.parse(pail.getArtifact('archive', fileName));
         expect(contents.foo).to.equal('bar');
         expect(archive.foo).to.equal('bar');
-        pail.deleteDir('archive');
         pail.deleteDir('workspace');
+        done();
+    });
+
+    it('getFiles', function (done) {
+       
+        var fileName = 'blah.json';
+        var files = pail.getFiles('archive');
+        pail.deleteDir('archive');
+        expect(files[0]).to.equal(fileName);
         done();
     });
 
