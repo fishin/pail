@@ -3,10 +3,6 @@
   "version": "0.0.4",
   "description": "file based json store",
   "main": "index.js",
-  "scripts": {
-    "test": "lab -a code -t 100 -v -m 10000",
-    "json": "lab -a code -r json -t 100 -o lab.json -m 10000"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/fishin/pail"
@@ -17,6 +13,13 @@
     "url": "https://github.com/fishin/pail/issues"
   },
   "homepage": "https://github.com/fishin/pail",
+  "engines": {
+    "node": ">=0.12.x"
+  },
+  "scripts": {
+    "test": "lab -a code -t 100 -v -m 10000",
+    "json": "lab -a code -r json -t 100 -o lab.json -m 10000"
+  },
   "dependencies": {
     "hapi": "8.x.x",
     "hoek": "2.x.x",
