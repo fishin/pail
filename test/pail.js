@@ -78,7 +78,7 @@ describe('pail', function () {
         expect(pailId).to.exist();
         done();
     });
-    
+
     it('getPails', function (done) {
 
         var pails = pail.getPails();
@@ -184,7 +184,7 @@ describe('pail', function () {
         var tmpDir = Path.join(pail.settings.dirPath, 'workspace', 'tmp');
         var tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
-        Fs.writeFileSync(tmpDir+'/'+tmpFile, 'foo');
+        Fs.writeFileSync(tmpDir + '/' + tmpFile, 'foo');
         var pails = pail.getPails(pail.settings.dirPath + '/' + createPail.id);
         expect(pails).to.have.length(1);
         var files = pail.getFiles('workspace');
@@ -197,14 +197,14 @@ describe('pail', function () {
     });
 
     it('getArtifact with workspace', function (done) {
-       
+
         var fileName = 'blah.json';
         var blah = {
-            "foo": "bar"
+            foo: 'bar'
         };
         var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
         pail.createDir('workspace');
-        Fs.writeFileSync(workspaceDir+'/'+fileName, JSON.stringify(blah));
+        Fs.writeFileSync(workspaceDir + '/' + fileName, JSON.stringify(blah));
         var contents = JSON.parse(pail.getArtifact('workspace', fileName));
         expect(contents.foo).to.equal('bar');
         pail.deleteDir('workspace');
@@ -212,14 +212,14 @@ describe('pail', function () {
     });
 
     it('copyArtifact noexist', function (done) {
-       
+
         var fileName = 'blah.json';
         var blah = {
-            "foo": "bar"
+            foo: 'bar'
         };
         var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
         pail.createDir('workspace');
-        Fs.writeFileSync(workspaceDir+'/'+fileName, JSON.stringify(blah));
+        Fs.writeFileSync(workspaceDir + '/' + fileName, JSON.stringify(blah));
         var contents = JSON.parse(pail.getArtifact('workspace', fileName));
         pail.copyArtifact('workspace', 'archive', fileName);
         var archive = JSON.parse(pail.getArtifact('archive', fileName));
@@ -229,15 +229,15 @@ describe('pail', function () {
     });
 
     it('copyArtifact', function (done) {
-       
+
         var fileName = 'blah.json';
         var blah = {
-            "foo": "bar"
+            foo: 'bar'
         };
         var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
         pail.createDir('workspace');
         pail.createDir('archive');
-        Fs.writeFileSync(workspaceDir+'/'+fileName, JSON.stringify(blah));
+        Fs.writeFileSync(workspaceDir + '/' + fileName, JSON.stringify(blah));
         var contents = JSON.parse(pail.getArtifact('workspace', fileName));
         pail.copyArtifact('workspace', 'archive', fileName);
         var archive = JSON.parse(pail.getArtifact('archive', fileName));
@@ -248,7 +248,7 @@ describe('pail', function () {
     });
 
     it('getFiles', function (done) {
-       
+
         var fileName = 'blah.json';
         var files = pail.getFiles('archive');
         pail.deleteDir('archive');
@@ -276,7 +276,7 @@ describe('pail', function () {
     });
 
     it('getArtifact no workspace', function (done) {
-       
+
         var fileName = 'blah.json';
         var contents = pail.getArtifact('workspace', fileName);
         expect(contents).to.not.exist();
