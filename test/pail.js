@@ -52,9 +52,18 @@ describe('pail', function () {
         pail.createDir('workspace');
         expect(createPail.name).to.equal('name');
         expect(createPail.foo).to.equal('bar');
-        expect(config.createTime).to.exist();
-        expect(config.startTime).to.not.exist();
-        expect(config.status).to.equal('created');
+        expect(createPail.createTime).to.exist();
+        expect(createPail.startTime).to.not.exist();
+        expect(createPail.status).to.equal('created');
+        done();
+    });
+
+    it('createPail with same name', function (done) {
+
+        var config = { name: 'name', foo: 'bar' };
+        var createPail = pail.createPail(config);
+        pail.createDir('workspace');
+        expect(createPail).to.not.exist();
         done();
     });
 
