@@ -227,6 +227,13 @@ describe('pail', function () {
         done();
     });
 
+    it('copyArtifact null', function (done) {
+
+        pail.copyArtifact('workspace', 'archive', null);
+        // maybe check it doesnt throw an error?
+        done();
+    });
+
     it('copyArtifact noexist', function (done) {
 
         var fileName = 'blah.json';
