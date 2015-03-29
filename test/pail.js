@@ -31,6 +31,13 @@ describe('pail', function () {
         done();
     });
 
+    it('getPail with null pailId', function (done) {
+
+        var pail = noexist.getPail(null);
+        expect(pail).to.not.exist();
+        done();
+    });
+
     it('getFiles with no valid path', function (done) {
 
         var files = noexist.getFiles('noexist');
