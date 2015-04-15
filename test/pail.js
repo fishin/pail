@@ -328,17 +328,17 @@ describe('pail', function () {
         done();
     });
 
-    it('deleteLink', function (done) {
+    it('deleteName', function (done) {
 
         var config1 = { name: 'pail1', foo: 'bar' };
         var config2 = { name: 'pail2', foo: 'bar' };
         var createPail1 = pail.createPail(config1);
         var createPail2 = pail.createPail(config2);
-        pail.createLink(createPail1.id, 'link');
-        pail.createLink(createPail2.id, 'link');
+        pail.createName(createPail1.id, 'link');
+        pail.createName(createPail2.id, 'link');
         var link = pail.getPailByName('link');
         expect(link).to.equal(createPail2.id);
-        pail.deleteLink('link');
+        pail.deleteName('link');
         pail.deletePail(createPail1.id);
         pail.deletePail(createPail2.id);
         var deletePails = pail.getPails();
