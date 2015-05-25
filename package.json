@@ -2,7 +2,7 @@
   "name": "pail",
   "version": "0.0.5",
   "description": "file based json store for ficion",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/fishin/pail"
