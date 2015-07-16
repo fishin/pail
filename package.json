@@ -1,6 +1,6 @@
 {
   "name": "pail",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "file based json store for ficion",
   "main": "lib/index.js",
   "repository": {

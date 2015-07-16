@@ -12,8 +12,8 @@ var expect = Code.expect;
 var describe = lab.describe;
 var it = lab.it;
 
-var pail = new Pail({ dirPath: __dirname + '/tmp'});
-var noexist = new Pail({ dirPath: __dirname + '/noexist'});
+var pail = new Pail({ dirPath: __dirname + '/tmp' });
+var noexist = new Pail({ dirPath: __dirname + '/noexist' });
 
 describe('pail', function () {
 
@@ -26,15 +26,15 @@ describe('pail', function () {
 
     it('getPail with no valid path', function (done) {
 
-        var pail = noexist.getPail('noexist');
-        expect(pail).to.not.exist();
+        var nopail = noexist.getPail('noexist');
+        expect(nopail).to.not.exist();
         done();
     });
 
     it('getPail with null pailId', function (done) {
 
-        var pail = noexist.getPail(null);
-        expect(pail).to.not.exist();
+        var nopail = noexist.getPail(null);
+        expect(nopail).to.not.exist();
         done();
     });
 
