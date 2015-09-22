@@ -19,6 +19,7 @@
   "scripts": {
     "clean": "rm -rf node_modules",
     "console": "lab -a code -t 100 -v -m 2000 -L",
+    "docs": "jsdoc2md lib/** > api.md",
     "test": "lab -a code -t 100 -v -m 2000 -L -r json -o test.lab -r html -o test.html -r console -o stdout -r console -o test.log"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "code": "1.x.x",
+    "jsdoc-to-markdown": "1.2.x",
     "lab": "5.x.x"
   }
 }
