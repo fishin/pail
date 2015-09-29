@@ -242,7 +242,6 @@ describe('pail', function () {
         var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
         pail.createDir('workspace');
         Fs.writeFileSync(workspaceDir + '/' + fileName, JSON.stringify(blah));
-        var contents = JSON.parse(pail.getArtifact('workspace', fileName));
         pail.copyArtifact('workspace', 'archive', fileName);
         var archive = JSON.parse(pail.getArtifact('archive', fileName));
         expect(archive).to.not.exist();
@@ -291,8 +290,6 @@ describe('pail', function () {
 
     it('deleteWorkspace with no workspace noname', function (done) {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
         pail.deleteDir('workspace');
         done();
     });
