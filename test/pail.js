@@ -1,60 +1,62 @@
-var Code = require('code');
-var Fs = require('fs');
-var Lab = require('lab');
-var Path = require('path');
-var Pail = require('../lib/index');
+'use strict';
 
-var internals = {};
+const Code = require('code');
+const Fs = require('fs');
+const Lab = require('lab');
+const Path = require('path');
+const Pail = require('../lib/index');
 
-var lab = exports.lab = Lab.script();
-var expect = Code.expect;
-var describe = lab.describe;
-var it = lab.it;
+const internals = {};
 
-var pail = new Pail({ dirPath: __dirname + '/tmp' });
-var noexist = new Pail({ dirPath: __dirname + '/noexist' });
+const lab = exports.lab = Lab.script();
+const expect = Code.expect;
+const describe = lab.describe;
+const it = lab.it;
 
-describe('pail', function () {
+const pail = new Pail({ dirPath: __dirname + '/tmp' });
+const noexist = new Pail({ dirPath: __dirname + '/noexist' });
 
-    it('getPails with no valid path', function (done) {
+describe('pail', () => {
 
-        var pails = noexist.getPails();
+    it('getPails with no valid path', (done) => {
+
+        const pails = noexist.getPails();
         expect(pails).to.have.length(0);
         done();
     });
 
-    it('getPail with no valid path', function (done) {
+    it('getPail with no valid path', (done) => {
 
-        var nopail = noexist.getPail('noexist');
+        const nopail = noexist.getPail('noexist');
         expect(nopail).to.not.exist();
         done();
     });
 
-    it('getPail with null pailId', function (done) {
+    it('getPail with null pailId', (done) => {
 
-        var nopail = noexist.getPail(null);
+        const nopail = noexist.getPail(null);
         expect(nopail).to.not.exist();
         done();
     });
 
-    it('getFiles with no valid path', function (done) {
+    it('getFiles with no valid path', (done) => {
 
-        var files = noexist.getFiles('noexist');
+        const files = noexist.getFiles('noexist');
         expect(files.length).to.be.equal(0);
         done();
     });
 
-    it('getPailByName no link', function (done) {
+    it('getPailByName no link', (done) => {
 
-        var pailId = pail.getPailByName('link');
+        const pailId = pail.getPailByName('link');
         expect(pailId).to.not.exist();
         done();
     });
 
-    it('createPail with workspace', function (done) {
+    it('createPail with workspace', (done) => {
 
-        var config = { name: 'name', foo: 'bar' };
-        var createPail = pail.createPail(config);
+        const config = { name: 'name', foo: 'bar' };
+        const createPail = pail.createPail(config);
         pail.createDir('workspace');
         expect(createPail.name).to.equal('name');
         expect(createPail.foo).to.equal('bar');
@@ -64,223 +66,223 @@ describe('pail', function () {
         done();
     });
 
-    it('createPail with same name', function (done) {
+    it('createPail with same name', (done) => {
 
-        var config = { name: 'name', foo: 'bar' };
-        var createPail = pail.createPail(config);
+        const config = { name: 'name', foo: 'bar' };
+        const createPail = pail.createPail(config);
         pail.createDir('workspace');
         expect(createPail).to.not.exist();
         done();
     });
 
-    it('createPail with existing workspace', function (done) {
+    it('createPail with existing workspace', (done) => {
 
         pail.createDir('workspace');
         done();
     });
 
-    it('getPail', function (done) {
+    it('getPail', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         expect(getPail.foo).to.exist();
         done();
     });
 
-    it('getPailByName', function (done) {
+    it('getPailByName', (done) => {
 
-        var pailId = pail.getPailByName('name');
+        const pailId = pail.getPailByName('name');
         expect(pailId).to.exist();
         done();
     });
 
-    it('getPails', function (done) {
+    it('getPails', (done) => {
 
-        var pails = pail.getPails();
+        const pails = pail.getPails();
         expect(pails).to.have.length(1);
         done();
     });
 
-    it('updatePail starting', function (done) {
+    it('updatePail starting', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         getPail.status = 'starting';
-        var config = pail.updatePail(getPail);
+        const config = pail.updatePail(getPail);
         expect(config.startTime).to.exist();
         expect(config.finishTime).to.not.exist();
         expect(config.status).to.equal('started');
         done();
     });
 
-    it('updatePail succeeded', function (done) {
+    it('updatePail succeeded', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         getPail.status = 'succeeded';
         getPail.finishTime = null;
-        var config = pail.updatePail(getPail);
+        const config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist();
         expect(config.status).to.equal('succeeded');
-        var link = pail.getPailByName('lastSuccess');
+        const link = pail.getPailByName('lastSuccess');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist();
         done();
     });
 
-    it('updatePail failed', function (done) {
+    it('updatePail failed', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         getPail.status = 'failed';
         getPail.finishTime = null;
-        var config = pail.updatePail(getPail);
+        const config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist();
         expect(config.status).to.equal('failed');
-        var link = pail.getPailByName('lastFail');
+        const link = pail.getPailByName('lastFail');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist();
         done();
     });
 
-    it('updatePail cancelled', function (done) {
+    it('updatePail cancelled', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         getPail.status = 'cancelled';
         getPail.finishTime = null;
-        var config = pail.updatePail(getPail);
+        const config = pail.updatePail(getPail);
         expect(config.finishTime).to.exist();
         expect(config.status).to.equal('cancelled');
-        var link = pail.getPailByName('lastCancel');
+        const link = pail.getPailByName('lastCancel');
         expect(link).to.equal(config.id);
         expect(config.updateTime).to.exist();
         done();
     });
 
-    it('getLinks', function (done) {
+    it('getLinks', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
-        var links = pail.getLinks(getPail.id);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
+        const links = pail.getLinks(getPail.id);
         expect(links).to.have.length(5);
         done();
     });
 
-    it('updatePail rename', function (done) {
+    it('updatePail rename', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         getPail.name = 'newname';
-        var config = pail.updatePail(getPail);
+        const config = pail.updatePail(getPail);
         expect(config.name).to.equal('newname');
         expect(config.updateTime).to.exist();
         done();
     });
 
-    it('deletePail with workspace', function (done) {
+    it('deletePail with workspace', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         pail.deleteDir('workspace');
         pail.deletePail(getPail.id);
-        var links = pail.getLinks(getPail.id);
+        const links = pail.getLinks(getPail.id);
         expect(links).to.have.length(0);
-        var deletePails = pail.getPails();
+        const deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
     });
 
-    it('deleteWorkspace with files and dirs', function (done) {
+    it('deleteWorkspace with files and dirs', (done) => {
 
-        var config = { foo: 'bar' };
-        var createPail = pail.createPail(config);
+        const config = { foo: 'bar' };
+        const createPail = pail.createPail(config);
         pail.createDir('workspace');
-        var tmpDir = Path.join(pail.settings.dirPath, 'workspace', 'tmp');
-        var tmpFile = 'tmpFile';
+        const tmpDir = Path.join(pail.settings.dirPath, 'workspace', 'tmp');
+        const tmpFile = 'tmpFile';
         Fs.mkdirSync(tmpDir);
         Fs.writeFileSync(tmpDir + '/' + tmpFile, 'foo');
-        var pails = pail.getPails(pail.settings.dirPath + '/' + createPail.id);
+        const pails = pail.getPails(pail.settings.dirPath + '/' + createPail.id);
         expect(pails).to.have.length(1);
-        var files = pail.getFiles('workspace');
+        const files = pail.getFiles('workspace');
         expect(files.length).to.be.equal(0);
         pail.deleteDir('workspace');
         pail.deletePail(createPail.id);
-        var deletePails = pail.getPails(pail.settings.dirPath);
+        const deletePails = pail.getPails(pail.settings.dirPath);
         expect(deletePails).to.have.length(0);
         done();
     });
 
-    it('getArtifact with workspace', function (done) {
+    it('getArtifact with workspace', (done) => {
 
-        var fileName = 'blah.json';
-        var blah = {
+        const fileName = 'blah.json';
+        const blah = {
             foo: 'bar'
         };
-        var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
+        const workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
         pail.createDir('workspace');
         Fs.writeFileSync(workspaceDir + '/' + fileName, JSON.stringify(blah));
-        var contents = JSON.parse(pail.getArtifact('workspace', fileName));
+        const contents = JSON.parse(pail.getArtifact('workspace', fileName));
         expect(contents.foo).to.equal('bar');
         pail.deleteDir('workspace');
         done();
     });
 
-    it('copyArtifact null', function (done) {
+    it('copyArtifact null', (done) => {
 
         pail.copyArtifact('workspace', 'archive', null);
         // maybe check it doesnt throw an error?
         done();
     });
 
-    it('copyArtifact noexist', function (done) {
+    it('copyArtifact noexist', (done) => {
 
-        var fileName = 'blah.json';
-        var blah = {
+        const fileName = 'blah.json';
+        const blah = {
             foo: 'bar'
         };
-        var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
+        const workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
         pail.createDir('workspace');
         Fs.writeFileSync(workspaceDir + '/' + fileName, JSON.stringify(blah));
         pail.copyArtifact('workspace', 'archive', fileName);
-        var archive = JSON.parse(pail.getArtifact('archive', fileName));
+        const archive = JSON.parse(pail.getArtifact('archive', fileName));
         expect(archive).to.not.exist();
         pail.deleteDir('workspace');
         done();
     });
 
-    it('copyArtifact', function (done) {
+    it('copyArtifact', (done) => {
 
-        var fileName = 'blah.json';
-        var blah = {
+        const fileName = 'blah.json';
+        const blah = {
             foo: 'bar'
         };
-        var workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
+        const workspaceDir = Path.join(pail.settings.dirPath, 'workspace');
         pail.createDir('workspace');
         pail.createDir('archive');
         Fs.writeFileSync(workspaceDir + '/' + fileName, JSON.stringify(blah));
-        var contents = JSON.parse(pail.getArtifact('workspace', fileName));
+        const contents = JSON.parse(pail.getArtifact('workspace', fileName));
         pail.copyArtifact('workspace', 'archive', fileName);
-        var archive = JSON.parse(pail.getArtifact('archive', fileName));
+        const archive = JSON.parse(pail.getArtifact('archive', fileName));
         expect(contents.foo).to.equal('bar');
         expect(archive.foo).to.equal('bar');
         pail.deleteDir('workspace');
         done();
     });
 
-    it('getFiles', function (done) {
+    it('getFiles', (done) => {
 
-        var fileName = 'blah.json';
-        var files = pail.getFiles('archive');
+        const fileName = 'blah.json';
+        const files = pail.getFiles('archive');
         pail.deleteDir('archive');
         expect(files[0]).to.equal(fileName);
         done();
     });
 
-    it('createPail noname', function (done) {
+    it('createPail noname', (done) => {
 
-        var config = { foo: 'bar' };
-        var createPail = pail.createPail(config);
+        const config = { foo: 'bar' };
+        const createPail = pail.createPail(config);
         expect(createPail.foo).to.equal('bar');
         expect(config.createTime).to.exist();
         expect(config.startTime).to.not.exist();
@@ -288,56 +290,56 @@ describe('pail', function () {
         done();
     });
 
-    it('deleteWorkspace with no workspace noname', function (done) {
+    it('deleteWorkspace with no workspace noname', (done) => {
 
         pail.deleteDir('workspace');
         done();
     });
 
-    it('getArtifact no workspace', function (done) {
+    it('getArtifact no workspace', (done) => {
 
-        var fileName = 'blah.json';
-        var contents = pail.getArtifact('workspace', fileName);
+        const fileName = 'blah.json';
+        const contents = pail.getArtifact('workspace', fileName);
         expect(contents).to.not.exist();
         done();
     });
 
-    it('updatePail noname starting', function (done) {
+    it('updatePail noname starting', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         getPail.status = 'starting';
-        var config = pail.updatePail(getPail);
+        const config = pail.updatePail(getPail);
         expect(config.startTime).to.exist();
         expect(config.finishTime).to.not.exist();
         expect(config.status).to.equal('started');
         done();
     });
 
-    it('deletePail noname', function (done) {
+    it('deletePail noname', (done) => {
 
-        var pails = pail.getPails();
-        var getPail = pail.getPail(pails[0]);
+        const pails = pail.getPails();
+        const getPail = pail.getPail(pails[0]);
         pail.deletePail(getPail.id);
-        var deletePails = pail.getPails();
+        const deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
     });
 
-    it('deleteName', function (done) {
+    it('deleteName', (done) => {
 
-        var config1 = { name: 'pail1', foo: 'bar' };
-        var config2 = { name: 'pail2', foo: 'bar' };
-        var createPail1 = pail.createPail(config1);
-        var createPail2 = pail.createPail(config2);
+        const config1 = { name: 'pail1', foo: 'bar' };
+        const config2 = { name: 'pail2', foo: 'bar' };
+        const createPail1 = pail.createPail(config1);
+        const createPail2 = pail.createPail(config2);
         pail.createName(createPail1.id, 'link');
         pail.createName(createPail2.id, 'link');
-        var link = pail.getPailByName('link');
+        const link = pail.getPailByName('link');
         expect(link).to.equal(createPail2.id);
         pail.deleteName('link');
         pail.deletePail(createPail1.id);
         pail.deletePail(createPail2.id);
-        var deletePails = pail.getPails();
+        const deletePails = pail.getPails();
         expect(deletePails).to.have.length(0);
         done();
     });
